@@ -25,11 +25,11 @@ The config file can be found at ``Millennia/BepInEx/config/UnrestrictedAgeAdvanc
 Default: true
 
 
-**RemoveAgeAdvanceRestrictions**
+**RemoveAgeAdvanceRequirements**
 
-*Remove the restrictions to advance into a specific age.*
+*Remove the Requirements to advance into a specific age.*
 - *0 - disabled*
-- *1 - remove restrictions of variant and victory ages*
+- *1 - remove requirements of variant and victory ages*
 - *2 - remove resitrictions for all ages (disables crisis age lock)*
 
 Default: 0

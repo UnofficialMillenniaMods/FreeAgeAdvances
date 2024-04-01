@@ -15,7 +15,7 @@ namespace UnrestrictedAgeAdvances
     public class Plugin : BaseUnityPlugin
     {
         public ConfigEntry<bool> configAllowAlternateAgeAdvance;
-        public ConfigEntry<int> configRemoveAgeAdvanceRestrictions;
+        public ConfigEntry<int> configRemoveAgeAdvanceRequirements;
         public ConfigEntry<bool> configDisableCrisisAgeLock;
 
         public static Plugin Instance;
@@ -35,13 +35,13 @@ namespace UnrestrictedAgeAdvances
                 "Allow advancing from alternate ages to alternate ages" // Description of the option to show in the config file
             );
 
-            configRemoveAgeAdvanceRestrictions = Config.Bind(
+            configRemoveAgeAdvanceRequirements = Config.Bind(
                 "General",
-                "RemoveAgeAdvanceRestrictions",
+                "RemoveAgeAdvanceRequirements",
                 0,
-                "Remove the restrictions to advance into a specific age.\n" +
+                "Remove the Requirements to advance into a specific age.\n" +
                 "0 - disabled\n" +
-                "1 - remove restrictions of variant and victory ages\n" +
+                "1 - remove requirements of variant and victory ages\n" +
                 "2 - remove resitrictions for all ages (disables crisis age lock)"
             );
             configDisableCrisisAgeLock = Config.Bind(
@@ -52,7 +52,7 @@ namespace UnrestrictedAgeAdvances
             );
 
             Logger.LogInfo($"AllowAlternateAgeAdvance: {configAllowAlternateAgeAdvance.Value}");
-            Logger.LogInfo($"RemoveAgeAdvanceRestrictions: {configRemoveAgeAdvanceRestrictions.Value}");
+            Logger.LogInfo($"RemoveAgeAdvanceRequirements: {configRemoveAgeAdvanceRequirements.Value}");
             Logger.LogInfo($"DisableCrisisAgeLock: {configDisableCrisisAgeLock.Value}");
 
             Logger.LogInfo($"Plugin UnrestrictedAgeAdvances is loaded!");
@@ -66,7 +66,7 @@ namespace UnrestrictedAgeAdvances
         {
             var harmony = new Harmony("UnrestrictedAgeAdvances");
 
-            if (configAllowAlternateAgeAdvance.Value || configRemoveAgeAdvanceRestrictions.Value != 0)
+            if (configAllowAlternateAgeAdvance.Value || configRemoveAgeAdvanceRequirements.Value != 0)
             {
                 harmony.PatchAll();
             }
@@ -135,8 +135,8 @@ namespace UnrestrictedAgeAdvances
                     availableNextAges.Add(nextAge);
 
                     if (
-                        (Plugin.Instance.configRemoveAgeAdvanceRestrictions.Value == 1 && !ATechManager.Instance.DoesAgeBaseHaveTag(nextAge, ATechManager.cCardTagAgeCrisis)) ||
-                        (Plugin.Instance.configRemoveAgeAdvanceRestrictions.Value == 2)
+                        (Plugin.Instance.configRemoveAgeAdvanceRequirements.Value == 1 && !ATechManager.Instance.DoesAgeBaseHaveTag(nextAge, ATechManager.cCardTagAgeCrisis)) ||
+                        (Plugin.Instance.configRemoveAgeAdvanceRequirements.Value == 2)
                     )
                     {
                         MLogger.LogInfo("    Removing requirements");
@@ -189,7 +189,7 @@ namespace UnrestrictedAgeAdvances
         static void Postfix(ref bool __result)
         {
             if (__result && (
-                Plugin.Instance.configDisableCrisisAgeLock.Value || Plugin.Instance.configRemoveAgeAdvanceRestrictions.Value == 2
+                Plugin.Instance.configDisableCrisisAgeLock.Value || Plugin.Instance.configRemoveAgeAdvanceRequirements.Value == 2
              ))
             {
                 var MLogger = Logger.CreateLogSource("PreventForcedFutureAge");
